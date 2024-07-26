@@ -1,5 +1,4 @@
-package com.example.tictactoegama.models;
-import java.util.ArrayList;
+package com.example.tic_tac_toeserver.models;import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

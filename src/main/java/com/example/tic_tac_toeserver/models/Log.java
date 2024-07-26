@@ -1,5 +1,4 @@
-package com.example.tictactoegama.models;
-import java.util.Date;
+package com.example.tic_tac_toeserver.models;import java.util.Date;
 
 import org.json.JSONObject;
 public class Log {

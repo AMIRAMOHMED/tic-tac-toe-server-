@@ -1,5 +1,4 @@
-package com.example.tictactoegama.models;
-
+package com.example.tic_tac_toeserver.models;
 import org.json.JSONObject;
 
 public class Player {

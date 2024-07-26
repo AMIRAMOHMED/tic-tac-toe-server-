@@ -81,7 +81,9 @@ public class DatabaseHandler {
         stmt.setString(2, user.getUsername());
         stmt.executeUpdate();
     }
-
+    public Connection getConnection() {
+        return this.connection;
+    }
     public void saveGame(Game game) throws SQLException {
         String query = "INSERT INTO games (player1, player2, board, isGameActive, isPlayer1Turn, startTime, endTime) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(query);

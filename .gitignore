@@ -38,3 +38,4 @@ build/
 .DS_Store
 .idea/misc.xml
 /.idea
+src/main/java/com/example/tic_tac_toeserver/database/DatabaseConnection.java

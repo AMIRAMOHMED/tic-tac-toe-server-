@@ -12,7 +12,7 @@ public class Server {
 
     public Server() {
         try {
-            this.serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.13.101"));
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.13.101"));
             System.out.println("Server started on port 5005");
             while(true) {
                 clientSocket = serverSocket.accept();

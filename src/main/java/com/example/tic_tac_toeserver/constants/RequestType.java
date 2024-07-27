@@ -1,6 +1,6 @@
 package com.example.tic_tac_toeserver.constants;
 
-enum RequestType {
+public enum RequestType {
     Register,
     Login,
     RequestGame,

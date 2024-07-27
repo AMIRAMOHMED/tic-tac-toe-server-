@@ -97,7 +97,7 @@ public class Player {
     }
     @Override
     public String toString() {
-        return "Player [{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
+        return "[{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
                 + isingame + ", \"gamesplayed\":" + gamesplayed + ", \"wins\":" + wins + ", \"draws\":" + draws + ", \"losses\":"
                 + losses + ", \"score\":" + score + "}]";
     }

@@ -18,7 +18,7 @@ public class DatabaseHandler {
         // Establish a database connection
         String url = "jdbc:mysql://localhost:3306/tic_tac_toe";
         String user = "root";
-        String password = "password";
+        String password = "";
         connection = DriverManager.getConnection(url, user, password);
     }
 

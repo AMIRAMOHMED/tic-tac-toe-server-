@@ -3,6 +3,7 @@ module com.example.tic_tac_toeserver {
     requires javafx.fxml;
     requires java.sql;
     requires org.json;
+    requires mysql.connector.j;
 
 
     opens com.example.tic_tac_toeserver to javafx.fxml;

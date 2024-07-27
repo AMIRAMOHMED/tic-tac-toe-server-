@@ -20,6 +20,15 @@ public class ClientHandler implements Runnable {
         this.player = player;
         clients.add(this);
     }
+    public boolean sendGameRequest(Player opponent){
+        int opponentClient=clients.indexOf(opponent);
+        if(opponentClient!=-1){
+            System.out.println("i found opponent");
+            ClientHandler opponentClientHandler=clients.get(opponentClient);
+            //opponentClientHandler.clientSocket.getOutputStream("").
+        }
+        return true;
+    }
 
     @Override
     public void run() {
@@ -27,7 +36,7 @@ public class ClientHandler implements Runnable {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
             String request;
             while ((request = in.readLine()) != null) {
-                Response.getResponse(request);
+                //Response.getResponse();
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -26,8 +26,9 @@ public class Server {
                 input = new DataInputStream(clientSocket.getInputStream());
                 output = new DataOutputStream(clientSocket.getOutputStream());
                 String s = input.readUTF();
+
                 System.out.println(s);
-                String response = Response.getResponse(s);
+                String response = Response.getResponse(s,clientSocket);
                 output.writeUTF(response);
             }
         } catch (IOException var2) {

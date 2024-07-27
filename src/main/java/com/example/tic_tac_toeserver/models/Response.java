@@ -5,13 +5,15 @@ import org.json.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 public class Response {
     public static String getResponse(String response){
         JSONObject object = new JSONObject(response);
         String type = object.getString("RequestType");
+
         return switch (type) {
-            case "Register" -> "";
+            case "Register" -> Register(object);
             case "Login" -> "";
             case "RequestGame" -> "";
             case "PlayAgain" -> "";
@@ -51,8 +53,23 @@ public class Response {
 //
 //        }
     }
+
+
+
     private void Login(String json){
         
+    }
+    private static String Register(JSONObject jsonObject) {
+        String reply= "";
+        apiFunctions api = new apiFunctions();
+        JSONObject object = jsonObject.getJSONObject("User");
+        String username = object.getString("username");
+        String email = object.getString("email");
+        String password = object.getString("password");
+
+        int rsInsertPlayer = api.create("INSERT INTO player (username, isloggedin,isingame, score, wins, draws, losses) VALUES ('"+username+"', 0,0,0,0,0,0)");
+        int rsInsertUser = api.create("INSERT INTO user (username,email, password) VALUES ('"+username+"', '"+email+"', '"+password+"')");
+        return rsInsertPlayer+""+rsInsertUser;
     }
     private static String getPlayList(){
         String reply= "";

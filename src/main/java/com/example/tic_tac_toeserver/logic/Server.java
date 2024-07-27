@@ -23,6 +23,7 @@ public class Server {
             System.out.println("Server started on port 5005");
             while(true) {
                 clientSocket = serverSocket.accept();
+                System.out.println(clientSocket.toString());
                 input = new DataInputStream(clientSocket.getInputStream());
                 output = new DataOutputStream(clientSocket.getOutputStream());
                 String s = input.readUTF();

@@ -97,9 +97,9 @@ public class Player {
     }
     @Override
     public String toString() {
-        return "{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
+        return "Player [{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
                 + isingame + ", \"gamesplayed\":" + gamesplayed + ", \"wins\":" + wins + ", \"draws\":" + draws + ", \"losses\":"
-                + losses + ", \"score\":" + score + "}";
+                + losses + ", \"score\":" + score + "}]";
     }
 
     public void fromJson(String json){

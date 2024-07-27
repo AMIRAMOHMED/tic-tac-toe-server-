@@ -1,6 +1,7 @@
 package com.example.tic_tac_toeserver.logic;
 
 import com.example.tic_tac_toeserver.models.Player;
+import com.example.tic_tac_toeserver.models.Response;
 import com.example.tic_tac_toeserver.models.User;
 import com.mysql.cj.xdevapi.Client;
 
@@ -26,7 +27,7 @@ public class ClientHandler implements Runnable {
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
             String request;
             while ((request = in.readLine()) != null) {
-
+                Response.getResponse(request);
             }
         } catch (IOException e) {
             e.printStackTrace();

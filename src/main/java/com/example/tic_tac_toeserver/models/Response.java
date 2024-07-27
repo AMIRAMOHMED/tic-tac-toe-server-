@@ -3,8 +3,7 @@ package com.example.tic_tac_toeserver.models;
 import com.example.tic_tac_toeserver.constants.RequestType;
 
 public class Response {
-    Response(){}
-    public static void getResponse(RequestType type){
+    public static void getResponse(RequestType type, String json){
         switch (type) {
             case Register:
                 
@@ -33,5 +32,8 @@ public class Response {
             default:
                 break;
         }
+    }
+    private void Login(String json){
+        
     }
 }

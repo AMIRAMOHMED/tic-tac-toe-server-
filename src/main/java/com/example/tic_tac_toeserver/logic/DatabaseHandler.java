@@ -1,4 +1,5 @@
-package com.example.tic_tac_toeserver.models;
+package com.example.tic_tac_toeserver.logic;
+
 
 import com.example.tic_tac_toeserver.models.User;
 
@@ -61,18 +62,6 @@ public class DatabaseHandler {
         return users;
     }
 
-    public List<Game> fetchGameHistory(String username) throws SQLException {
-        List<Game> games = new ArrayList<>();
-        String query = "SELECT * FROM games WHERE player1 = ? OR player2 = ?";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, username);
-        stmt.setString(2, username);
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            // Create and add Game objects based on the result set
-        }
-        return games;
-    }
 
     public void updateUser(User user) throws SQLException {
         String query = "UPDATE users SET password = ? WHERE username = ?";
@@ -84,17 +73,5 @@ public class DatabaseHandler {
     public Connection getConnection() {
         return this.connection;
     }
-    public void saveGame(Game game) throws SQLException {
-        String query = "INSERT INTO games (player1, player2, board, isGameActive, isPlayer1Turn, startTime, endTime) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        stmt.setString(1, game.getPlayer1().getUsername());
-        stmt.setString(2, game.getPlayer2().getUsername());
-        // Convert board to a suitable format for storage
-        stmt.setObject(3, game.getBoard()); // Placeholder
-        stmt.setBoolean(4, game.isGameActive());
-        stmt.setBoolean(5, game.isPlayer1Turn());
-        stmt.setTimestamp(6, new Timestamp(game.getStartTime().getTime()));
-        stmt.setTimestamp(7, new Timestamp(game.getEndTime().getTime()));
-        stmt.executeUpdate();
-    }
+
 }

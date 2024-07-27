@@ -1,11 +1,7 @@
 package com.example.tic_tac_toeserver.models;
-
-import java.util.List;
-
 public class User {
     private String username;
     private String password;
-    private List<Game> gameHistory;
     private boolean isOnline;
 
     public User(String username, String password) {
@@ -27,14 +23,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Game> getGameHistory() {
-        return gameHistory;
-    }
-
-    public void setGameHistory(List<Game> gameHistory) {
-        this.gameHistory = gameHistory;
     }
 
     public boolean isOnline() {

@@ -1,4 +1,6 @@
-package com.example.tic_tac_toeserver.models;
+package com.example.tic_tac_toeserver.logic;
+
+import com.example.tic_tac_toeserver.models.User;
 
 import java.io.*;
 import java.net.Socket;

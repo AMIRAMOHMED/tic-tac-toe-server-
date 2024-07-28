@@ -39,7 +39,7 @@ public class Server extends Thread {
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.15.15"));
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("192.168.1.3"));
             System.out.println("Server started on port 5005");
             while (running) {
                 Socket clientSocket = serverSocket.accept();
@@ -57,7 +57,7 @@ public class Server extends Thread {
         server.startServer();
     }
 
-    private static class ClientHandler extends Thread {
+    /*private static class ClientHandler extends Thread {
         private final Socket clientSocket;
         private DataInputStream input;
         private DataOutputStream output;
@@ -93,17 +93,10 @@ public class Server extends Thread {
                 }
             }
         }
-        public static void sendMessageToPlayer(int playerId, String message) {
-            ClientHandler handler = clientSocket.get(playerId);
-            if (handler != null) {
-                handler.sendMessage(message);
-            } else {
-                System.out.println("Player with ID " + playerId + " not found");
-            }
-        }
+
 
     }
     private String getUsernameFromSession() {
         return username;
-    }
+    }*/
 }

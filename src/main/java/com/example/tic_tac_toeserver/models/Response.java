@@ -17,7 +17,7 @@ public class Response {
         return switch (type) {
             case "Register" -> Register(object);
             case "Login" -> Login(object);
-//            case "RequestGame" -> RequestGame(object);
+            case "RequestGame" -> RequestGame(object);
             case "PlayAgain" -> "";
             case "Surrender" -> "";
             case "PlayerList" -> getPlayList();

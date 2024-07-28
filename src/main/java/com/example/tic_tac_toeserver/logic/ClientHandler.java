@@ -33,5 +33,13 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
+    public static void sendMessageToPlayer(int playerId, String message) {
+        ClientHandler handler = clientSocket.get(playerId);
+        if (handler != null) {
+            handler.sendMessage(message);
+        } else {
+            System.out.println("Player with ID " + playerId + " not found");
+        }
+    }
 
 }

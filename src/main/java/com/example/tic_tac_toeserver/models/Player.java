@@ -95,6 +95,9 @@ public class Player {
         wins++;
         score++;
     }
+    public void addDraw(){
+        draws++;
+    }
     @Override
     public String toString() {
         return "[{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"

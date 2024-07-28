@@ -16,8 +16,8 @@ public class Response {
             case "RequestGame" -> "";
             case "PlayAgain" -> "";
             case "Surrender" -> "";
-            case "PlayerList" -> getPlayList();
-            case "Scoreboard" -> "";
+            case "PlayerList" -> getPlayList(response);
+            case "Scoreboard" -> getScoreBoard();
             case "GameHistory" -> "";
             default -> "";
         };
@@ -54,19 +54,44 @@ public class Response {
     private void Login(String json){
         
     }
-    private static String getPlayList(){
+    private static String getPlayList(String response){
         String reply= "";
         apiFunctions api = new apiFunctions();
-        ResultSet rs = api.read("SELECT * FROM player WHERE isloggedin = 1");
+        ResultSet rs;
+        if (response.contains("Search")) {
+            JSONObject object = new JSONObject(response);
+            rs = api.read("SELECT * FROM player WHERE isloggedin = 1 , username =%"+object.getString("Search")+"%");
+        }
+        else
+            rs = api.read("SELECT * FROM player WHERE isloggedin = 1");
+
         try {
+            reply = "{\"PlayList\":[";
             while (rs.next()) {
-                Player player = new Player();
-                player.fromJson(rs.toString());
-                reply += player.toString();
+                reply += "{\"username\":\""+rs.getString("username")+"\" , \"isloggedin\":"+rs.getBoolean(3)+"},";
             }
+            reply += "]}";
         } catch (SQLException ignored){
 
         }
+        System.out.println(reply);
+        return reply;
+    }
+    private static String getScoreBoard(){
+        String reply= "";
+        apiFunctions api = new apiFunctions();
+        ResultSet rs = api.read("SELECT * FROM player ORDER BY score DESC LIMIT 20 ");
+
+        try {
+            reply = "{\"Scoreboard\":[";
+            while (rs.next()) {
+                reply += "{\"username\":\""+rs.getString("username")+"\" , \"score\":"+rs.getInt("score")+"},";
+            }
+            reply += "]}";
+        } catch (SQLException ignored){
+
+        }
+        System.out.println(reply);
         return reply;
     }
 }

@@ -39,7 +39,7 @@ public class Server extends Thread {
     public void  run () {
 
         try {
-            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("192.168.1.2"));
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.15.15"));
             System.out.println("Server started on port 5005");
             while(running) {
                 clientSocket = serverSocket.accept();

@@ -1,17 +1,17 @@
 package com.example.tic_tac_toeserver.controller;
 
+import com.example.tic_tac_toeserver.database.apiFunctions;
 import com.example.tic_tac_toeserver.logic.Server;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-public class  HomeController {
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class HomeController {
 
     @FXML
     private Label welcomeText;
@@ -20,41 +20,26 @@ public class  HomeController {
     private Button serverStatusButton;
 
     @FXML
-    private ListView<User> userListView;
+    private Label onlineUsersLabel;
+
+    @FXML
+    private Label offlineUsersLabel;
 
     private boolean isServerOpen = true;
-    private ObservableList<User> userList;
     private Server server;
+
+    private int onlineUsers = 0;
+    private int offlineUsers = 0;
 
     @FXML
     public void initialize() {
         server = new Server();
         server.startServer(); // Start the server by default
-
-        userList = FXCollections.observableArrayList(
-                new User("Alice", true),
-                new User("Bob", false),
-                new User("Charlie", true),
-                new User("Diana", false)
-        );
-
-        userListView.setItems(userList);
-        userListView.setCellFactory(param -> new ListCell<User>() {
-            @Override
-            protected void updateItem(User user, boolean empty) {
-                super.updateItem(user, empty);
-                if (empty || user == null) {
-                    setText(null);
-                } else {
-                    Text text = new Text(user.getName() + " - " + (user.isOnline() ? "Online" : "Offline"));
-                    text.setFill(user.isOnline() ? Color.GREEN : Color.RED);
-                    setGraphic(text);
-                }
-            }
-        });
+        fetchUserStatus();
 
         // Set initial server status button text and color
         updateServerStatusButton();
+        updateUsersStatus();
     }
 
     @FXML
@@ -69,6 +54,24 @@ public class  HomeController {
         updateServerStatusButton();
     }
 
+    private void fetchUserStatus() {
+        apiFunctions api = new apiFunctions();
+        ResultSet resultSet = api.read(
+                "SELECT isloggedin, COUNT(*) as count FROM player GROUP BY isloggedin");
+
+        try {
+            while (resultSet.next()) {
+                if (resultSet.getInt("isloggedin") == 1) {
+                    onlineUsers = resultSet.getInt("count");
+                } else {
+                    offlineUsers = resultSet.getInt("count");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void updateServerStatusButton() {
         if (isServerOpen) {
             serverStatusButton.setText("Server Status: Open");
@@ -79,22 +82,8 @@ public class  HomeController {
         }
     }
 
-    // User class to represent the user data
-    public static class User {
-        private String name;
-        private boolean isOnline;
-
-        public User(String name, boolean isOnline) {
-            this.name = name;
-            this.isOnline = isOnline;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean isOnline() {
-            return isOnline;
-        }
+    private void updateUsersStatus() {
+        onlineUsersLabel.setText("Online Users: " + onlineUsers);
+        offlineUsersLabel.setText("Offline Users: " + offlineUsers);
     }
 }

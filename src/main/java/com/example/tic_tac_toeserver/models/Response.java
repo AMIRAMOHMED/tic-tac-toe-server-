@@ -5,7 +5,9 @@ import org.json.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+
+import static sun.net.www.protocol.http.AuthCacheValue.Type.Server;
+
 
 public class Response {
     public static String getResponse(String response){
@@ -15,7 +17,7 @@ public class Response {
         return switch (type) {
             case "Register" -> Register(object);
             case "Login" -> Login(object);
-            case "RequestGame" -> "";
+//            case "RequestGame" -> RequestGame(object);
             case "PlayAgain" -> "";
             case "Surrender" -> "";
             case "PlayerList" -> getPlayList();
@@ -25,12 +27,29 @@ public class Response {
         };
 
     }
+    private static String RequestGame(JSONObject json) {
+        int playerId = json.getInt("PlayerId");
+        int targetId = json.getInt("TargetId");
+
+        apiFunctions api = new apiFunctions();
+        String playerUsername = api.getUsernameById(playerId);
+        String targetUsername = api.getUsernameById(targetId);
+
+        if (targetUsername != null && playerUsername != null) {
+            String message = playerUsername + " wants to play with you!";
+            Server.sendMessageToPlayer(targetId, message);
+            return "Request sent to " + targetUsername;
+        } else {
+            return "Player not found";
+        }
+    }
+
 
 
     private static String Login(JSONObject json) {
         String reply = "";
         apiFunctions api = new apiFunctions();
-        JSONObject object = new JSONObject(json.getString("User"));
+        JSONObject object = json.getJSONObject("User");
         String username = object.getString("username");
         String password = object.getString("password");
 
@@ -74,9 +93,11 @@ public class Response {
         ResultSet rs = api.read("SELECT * FROM player WHERE isloggedin = 1");
         try {
             while (rs.next()) {
-                Player player = new Player();
-                player.fromJson(rs.toString());
-                reply += player.toString();
+                reply = "{\"PlayList\":[";
+                while (rs.next()) {
+                    reply += "{\"userid\":"+rs.getInt("userid")+", \"username\":\""+rs.getString("username")+"\" , \"isingame\":"+rs.getBoolean("isingame")+"},";
+                }
+                reply += "]}";
             }
         } catch (SQLException ignored){
 

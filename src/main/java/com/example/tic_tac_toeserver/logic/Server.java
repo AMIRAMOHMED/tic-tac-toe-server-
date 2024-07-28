@@ -1,6 +1,7 @@
 package com.example.tic_tac_toeserver.logic;
 
 import com.example.tic_tac_toeserver.models.Response;
+import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,9 +10,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+
 public class Server extends Thread {
     private ServerSocket serverSocket;
+    private ClientHandler clientSocket;
     private boolean running = false;
+    private int userId;
+    private String username;
 
     public void startServer() {
         if (!running) {
@@ -63,9 +68,14 @@ public class Server extends Thread {
 
         @Override
         public void run() {
+
             try {
                 input = new DataInputStream(clientSocket.getInputStream());
                 output = new DataOutputStream(clientSocket.getOutputStream());
+                String initialMessage = input.readUTF();
+                JSONObject jsonObject = new JSONObject(initialMessage);
+
+
 
                 while (true) {
                     String message = input.readUTF();
@@ -83,5 +93,17 @@ public class Server extends Thread {
                 }
             }
         }
+        public static void sendMessageToPlayer(int playerId, String message) {
+            ClientHandler handler = clientSocket.get(playerId);
+            if (handler != null) {
+                handler.sendMessage(message);
+            } else {
+                System.out.println("Player with ID " + playerId + " not found");
+            }
+        }
+
+    }
+    private String getUsernameFromSession() {
+        return username;
     }
 }

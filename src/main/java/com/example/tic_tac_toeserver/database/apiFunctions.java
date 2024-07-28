@@ -1,6 +1,7 @@
 package com.example.tic_tac_toeserver.database;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class apiFunctions {
 
@@ -29,5 +30,18 @@ public class apiFunctions {
     public int delete(String query) {
         db = new DatabaseConnection();
         return db.insertData(query);
+    }
+
+    public String getUsernameById(int playerId) {
+        String username = null;
+        String query = "SELECT username FROM player WHERE id = " + playerId;
+        try (ResultSet rs = read(query)) {
+            if (rs.next()) {
+                username = rs.getString("username");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return username;
     }
 }

@@ -30,7 +30,7 @@ public class Server {
 
     public Server() {
         try {
-            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("172.16.14.190"));
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("192.168.1.3"));
             gameMoves= new GameMoves();
             moves = new ArrayList<Integer>();
             board = new PlayBoard();

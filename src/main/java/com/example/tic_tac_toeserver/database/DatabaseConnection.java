@@ -12,7 +12,7 @@ public class DatabaseConnection {
 
             String url ="jdbc:mysql://localhost:3306/tictactoe";
             String userName=    "root";
-            String password = "";
+            String password = "123456789";
             con = DriverManager.getConnection(url,userName,password);
 
         }catch (SQLException e){

@@ -11,17 +11,37 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Server extends Thread {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     DataInputStream input;
     DataOutput output;
+    private boolean running = false;
 
-    public Server() {
+    public void startServer() {
+        if (!running) {
+            running = true;
+            this.start();
+        }
+    }
+
+    public void stopServer() {
+        running = false;
         try {
-            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.13.40"));
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void  run () {
+
+        try {
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("192.168.1.2"));
             System.out.println("Server started on port 5005");
-            while(true) {
+            while(running) {
                 clientSocket = serverSocket.accept();
                 System.out.println(clientSocket.toString());
                 input = new DataInputStream(clientSocket.getInputStream());
@@ -37,6 +57,7 @@ public class Server {
         }
     }
     public static void main(String[] args) {
-        new Server();
+        Server server =  new Server();
+        server.startServer();
     }
 }

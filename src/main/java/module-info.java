@@ -8,4 +8,6 @@ module com.example.tic_tac_toeserver {
 
     opens com.example.tic_tac_toeserver to javafx.fxml;
     exports com.example.tic_tac_toeserver;
+    exports com.example.tic_tac_toeserver.controller;
+    opens com.example.tic_tac_toeserver.controller to javafx.fxml;
 }

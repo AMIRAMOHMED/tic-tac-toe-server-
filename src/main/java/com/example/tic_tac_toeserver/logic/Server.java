@@ -34,7 +34,7 @@ public class Server extends Thread {
     @Override
     public void run() {
         try {
-            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("10.10.15.15"));
+            serverSocket = new ServerSocket(5005, 0, InetAddress.getByName("192.168.1.3"));
             System.out.println("Server started on port 5005");
             while (running) {
                 Socket clientSocket = serverSocket.accept();

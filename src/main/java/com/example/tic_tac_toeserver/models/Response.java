@@ -1,12 +1,13 @@
 package com.example.tic_tac_toeserver.models;
 
 import com.example.tic_tac_toeserver.database.apiFunctions;
+import com.example.tic_tac_toeserver.logic.ClientHandler;
 import org.json.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static sun.net.www.protocol.http.AuthCacheValue.Type.Server;
+
 
 
 public class Response {
@@ -28,7 +29,7 @@ public class Response {
 
     }
     private static String RequestGame(JSONObject json) {
-        int playerId = json.getInt("PlayerId");
+        /*int playerId = json.getInt("PlayerId");
         int targetId = json.getInt("TargetId");
 
         apiFunctions api = new apiFunctions();
@@ -41,7 +42,8 @@ public class Response {
             return "Request sent to " + targetUsername;
         } else {
             return "Player not found";
-        }
+        }*/
+        return "";
     }
 
 
@@ -60,6 +62,7 @@ public class Response {
                 int updateStatus = api.update("UPDATE player SET isloggedin = 1 WHERE username = '" + username + "'");
                 if (updateStatus > 0) {
                     reply = "Success";
+                    
                 } else {
                     reply = "Failed to update login status";
                 }

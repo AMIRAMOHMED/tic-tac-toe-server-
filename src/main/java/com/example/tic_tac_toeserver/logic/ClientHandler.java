@@ -11,10 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
     private Socket clientSocket;
     Player player;
     private static ArrayList<ClientHandler> clients;
+    public ClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
     public ClientHandler(Socket clientSocket, Player player) {
         this.clientSocket = clientSocket;
         this.player = player;
@@ -33,13 +36,13 @@ public class ClientHandler implements Runnable {
             e.printStackTrace();
         }
     }
-    public static void sendMessageToPlayer(int playerId, String message) {
+    /*public static void sendMessageToPlayer(int playerId, String message) {
         ClientHandler handler = clientSocket.get(playerId);
         if (handler != null) {
             handler.sendMessage(message);
         } else {
             System.out.println("Player with ID " + playerId + " not found");
         }
-    }
+    }*/
 
 }

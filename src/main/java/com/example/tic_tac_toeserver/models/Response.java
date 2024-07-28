@@ -14,7 +14,7 @@ public class Response {
 
         return switch (type) {
             case "Register" -> Register(object);
-            case "Login" -> "";
+            case "Login" -> Login(object);
             case "RequestGame" -> "";
             case "PlayAgain" -> "";
             case "Surrender" -> "";
@@ -23,41 +23,36 @@ public class Response {
             case "GameHistory" -> "";
             default -> "";
         };
-//        switch (type) {
-//            case "Register":
-//                return "";
-//            case "Login":
-//                return "";
-//            case "RequestGame":
-//                Player player = new Player();
-//                player.fromJson(object.getString("Player"));
-//                return player.getUsername();
-//
-//            case "PlayAgain":
-//                return "";
-//
-//            case "Surrender":
-//                return "";
-//
-//            case "PlayerList":
-//                return "";
-//
-//            case "Scoreboard":
-//                return "";
-//
-//            case "GameHistory":
-//                return "";
-//
-//            default:
-//                return "";
-//
-//        }
+
     }
 
 
+    private static String Login(JSONObject json) {
+        String reply = "";
+        apiFunctions api = new apiFunctions();
+        JSONObject object = new JSONObject(json.getString("User"));
+        String username = object.getString("username");
+        String password = object.getString("password");
 
-    private void Login(String json){
-        
+        ResultSet rs = api.read("SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "'");
+        try {
+            if (rs.next()) {
+                // Update player's login status
+                int updateStatus = api.update("UPDATE player SET isloggedin = 1 WHERE username = '" + username + "'");
+                if (updateStatus > 0) {
+                    reply = "Success";
+                } else {
+                    reply = "Failed to update login status";
+                }
+            } else {
+                reply = "Invalid username or password";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            reply = "Error occurred during login";
+        }
+
+        return reply;
     }
     private static String Register(JSONObject jsonObject) {
         String reply= "";
@@ -69,8 +64,10 @@ public class Response {
 
         int rsInsertPlayer = api.create("INSERT INTO player (username, isloggedin,isingame, score, wins, draws, losses) VALUES ('"+username+"', 0,0,0,0,0,0)");
         int rsInsertUser = api.create("INSERT INTO user (username,email, password) VALUES ('"+username+"', '"+email+"', '"+password+"')");
-        return rsInsertPlayer+""+rsInsertUser;
+        return ""+rsInsertPlayer+rsInsertUser;
     }
+
+
     private static String getPlayList(){
         String reply= "";
         apiFunctions api = new apiFunctions();

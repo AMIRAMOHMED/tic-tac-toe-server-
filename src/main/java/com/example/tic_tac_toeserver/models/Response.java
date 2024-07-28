@@ -1,5 +1,6 @@
 package com.example.tic_tac_toeserver.models;
 
+import com.example.tic_tac_toeserver.database.DatabaseConnection;
 import com.example.tic_tac_toeserver.database.apiFunctions;
 import org.json.JSONObject;
 
@@ -8,13 +9,13 @@ import java.sql.SQLException;
 import java.util.Date;
 
 public class Response {
-    public static String getResponse(String response){
+    public static String getResponse(String response) throws SQLException {
         JSONObject object = new JSONObject(response);
         String type = object.getString("RequestType");
 
         return switch (type) {
             case "Register" -> Register(object);
-            case "Login" -> "";
+            case "Login" -> Login(object);
             case "RequestGame" -> "";
             case "PlayAgain" -> "";
             case "Surrender" -> "";
@@ -23,42 +24,53 @@ public class Response {
             case "GameHistory" -> "";
             default -> "";
         };
-//        switch (type) {
-//            case "Register":
-//                return "";
-//            case "Login":
-//                return "";
-//            case "RequestGame":
-//                Player player = new Player();
-//                player.fromJson(object.getString("Player"));
-//                return player.getUsername();
-//
-//            case "PlayAgain":
-//                return "";
-//
-//            case "Surrender":
-//                return "";
-//
-//            case "PlayerList":
-//                return "";
-//
-//            case "Scoreboard":
-//                return "";
-//
-//            case "GameHistory":
-//                return "";
-//
-//            default:
-//                return "";
-//
-//        }
+
     }
 
 
+    public static String Login(JSONObject request) {
+        JSONObject userJson = request.getJSONObject("User");
+        User user = new User();
+        user.fromJson(userJson.toString());
 
-    private void Login(String json){
-        
+        DatabaseConnection db = new DatabaseConnection();
+        String query = "SELECT * FROM user WHERE username='" + user.getUsername() + "' AND password='" + user.getPassword() + "'";
+
+        System.out.println("Executing query: " + query); // Debug: Print the query
+
+        ResultSet rs = db.getData(query);
+
+        try {
+            if (rs != null && rs.next()) {
+                return "1"; // Login success
+            } else {
+                return "0"; // Login failed
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "0";
+        } finally {
+            db.closeConnection();
+        }
     }
+
+    /*private static String Login(JSONObject json) throws SQLException {
+        String reply= "";
+        apiFunctions api = new apiFunctions();
+        JSONObject object = json.getJSONObject("User");
+        String username = object.getString("username");
+        String password = object.getString("password");
+
+        ResultSet rs = api.read("SELECT * FROM user WHERE username = '"+username+"'AND password='"+password+"'");
+        if(rs.next()){
+            User user = new User();
+            user.fromJson(rs.toString());
+            reply += user.toString();
+            return "1";
+        } else{
+            return"0";
+        }
+    }*/
     private static String Register(JSONObject jsonObject) {
         String reply= "";
         apiFunctions api = new apiFunctions();
@@ -69,7 +81,7 @@ public class Response {
 
         int rsInsertPlayer = api.create("INSERT INTO player (username, isloggedin,isingame, score, wins, draws, losses) VALUES ('"+username+"', 0,0,0,0,0,0)");
         int rsInsertUser = api.create("INSERT INTO user (username,email, password) VALUES ('"+username+"', '"+email+"', '"+password+"')");
-        return rsInsertPlayer+""+rsInsertUser;
+        return ""+rsInsertUser;
     }
     private static String getPlayList(){
         String reply= "";

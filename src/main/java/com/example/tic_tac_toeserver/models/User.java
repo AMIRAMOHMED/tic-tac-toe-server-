@@ -1,12 +1,26 @@
 package com.example.tic_tac_toeserver.models;
+
+import org.json.JSONObject;
+
 public class User {
     private String username;
     private String password;
     private boolean isOnline;
 
+    public User() {
+
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+    public void fromJson(String json){
+        JSONObject object = new JSONObject(json);
+        password = object.getString("password");
+        username = object.getString("username");
+        isOnline = object.optBoolean("isOnline", false);
+
     }
 
     public String getUsername() {

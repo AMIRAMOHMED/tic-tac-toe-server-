@@ -29,7 +29,7 @@ public class ClientHandler implements Runnable {
             while ((request = in.readLine()) != null) {
                 Response.getResponse(request);
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
     }

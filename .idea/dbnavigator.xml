@@ -9,12 +9,6 @@
     <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
-  <component name="DBNavigator.Project.DatabaseBrowserManager">
-    <autoscroll-to-editor value="false" />
-    <autoscroll-from-editor value="true" />
-    <show-object-properties value="false" />
-    <loaded-nodes />
-  </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="2eacdb43-a40a-4750-8637-528adcf27c9e">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
@@ -28,10 +22,6 @@
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="2eacdb43-a40a-4750-8637-528adcf27c9e" />
-  </component>
-  <component name="DBNavigator.Project.ObjectQuickFilterManager">
-    <last-used-operator value="EQUAL" />
-    <filters />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>

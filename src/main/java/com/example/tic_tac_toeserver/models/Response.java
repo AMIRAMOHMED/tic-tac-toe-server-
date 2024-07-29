@@ -15,12 +15,15 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+
+
 public class Response {
     public static String getResponse(String response, UserHandler userHandler){
         JSONObject object = new JSONObject(response);
         RequestType type = RequestType.valueOf(object.getString("RequestType"));
         return switch (type) {
-            case Register -> Register(response);
+            case Register -> Register(response)+"";
             case Login -> Login(response, userHandler);
             case RequestGame -> RequestGame(response)+"";
 //            case PlayAgain -> "";
@@ -50,6 +53,51 @@ public class Response {
         }
         return "{\"invalid\":\"Invalid username or password\"}";
     }
+
+
+
+    private static String Login(JSONObject json) {
+        String reply = "";
+        apiFunctions api = new apiFunctions();
+        JSONObject object = json.getJSONObject("User");
+        String username = object.getString("username");
+        String password = object.getString("password");
+
+        ResultSet rs = api.read("SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "'");
+        try {
+            if (rs.next()) {
+                // Update player's login status
+                int updateStatus = api.update("UPDATE player SET isloggedin = 1 WHERE username = '" + username + "'");
+                if (updateStatus > 0) {
+                    reply = "Success";
+                    
+                } else {
+                    reply = "Failed to update login status";
+                }
+            } else {
+                reply = "Invalid username or password";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            reply = "Error occurred during login";
+        }
+
+        return reply;
+    }
+    private static String Register(JSONObject jsonObject) {
+        String reply= "";
+        apiFunctions api = new apiFunctions();
+        JSONObject object = jsonObject.getJSONObject("User");
+        String username = object.getString("username");
+        String email = object.getString("email");
+        String password = object.getString("password");
+
+        int rsInsertPlayer = api.create("INSERT INTO player (username, isloggedin,isingame, score, wins, draws, losses) VALUES ('"+username+"', 0,0,0,0,0,0)");
+        int rsInsertUser = api.create("INSERT INTO user (username,email, password) VALUES ('"+username+"', '"+email+"', '"+password+"')");
+        return ""+rsInsertPlayer+rsInsertUser;
+    }
+
+
     private static String getPlayList(){
         String reply= "";
         apiFunctions api = new apiFunctions();
@@ -98,7 +146,7 @@ public class Response {
         }
         return false;
     }
-    public boolean Register(String response){
-
+    public static boolean Register(String response){
+        return false;
     }
 }

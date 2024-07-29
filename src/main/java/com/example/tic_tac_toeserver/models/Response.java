@@ -102,19 +102,16 @@ public class Response {
         System.out.println(reply);
         return reply;
     }
-    private static boolean RequestGame(String response){
+    private static String RequestGame(String response){
         JSONObject object = new JSONObject(response);
         int userid = object.getInt("userid");
         int opponentid = object.getInt("opponentid");
-        String sender = Server.clients.get(userid).getPlayer().toString();
-        Server.clients.get(opponentid).send("{\"RequestType\":\"RequestGame\",\"Player\":"+sender+"}");
+        GameHandler game = new GameHandler(Server.clients.get(userid),Server.clients.get(opponentid));
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(Server.clients.get(opponentid).getUserSocket().getInputStream()));
-            JSONObject answer = new JSONObject(reader.readLine());
-            return answer.getBoolean("Reply");
-        } catch (IOException e) {
-            e.printStackTrace();
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        return false;
+        return "";
     }
 }

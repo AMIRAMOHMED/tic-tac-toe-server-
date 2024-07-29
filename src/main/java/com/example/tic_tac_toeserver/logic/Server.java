@@ -12,6 +12,7 @@ public class Server extends Thread {
     private Socket clientSocket;
     public static HashMap<Integer, UserHandler> clients;
     public static HashMap<String, GameHandler> games ;
+    boolean running = false;
 static{
     clients = new HashMap<>();
     games =new HashMap<>();
@@ -49,10 +50,6 @@ static{
         }
     }
 
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.startServer();
-    }
 
     /*private static class ClientHandler extends Thread {
         private final Socket clientSocket;

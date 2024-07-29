@@ -49,48 +49,4 @@ static{
             e.printStackTrace();
         }
     }
-
-
-    /*private static class ClientHandler extends Thread {
-        private final Socket clientSocket;
-        private DataInputStream input;
-        private DataOutputStream output;
-
-        public ClientHandler(Socket clientSocket) {
-            this.clientSocket = clientSocket;
-        }
-
-        @Override
-        public void run() {
-
-            try {
-                input = new DataInputStream(clientSocket.getInputStream());
-                output = new DataOutputStream(clientSocket.getOutputStream());
-                String initialMessage = input.readUTF();
-                JSONObject jsonObject = new JSONObject(initialMessage);
-
-
-
-                while (true) {
-                    String message = input.readUTF();
-                    System.out.println("Received: " + message);
-                    String response = Response.getResponse(message);
-                    output.writeUTF(response);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    clientSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-
-    }
-    private String getUsernameFromSession() {
-        return username;
-    }*/
 }

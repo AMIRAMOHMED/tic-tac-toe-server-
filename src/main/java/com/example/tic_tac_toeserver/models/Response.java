@@ -46,45 +46,16 @@ public class Response {
                     userHandler.setPlayer(new Player(fs.getInt("userid"), fs.getString("username"), fs.getBoolean("isloggedin"), fs.getBoolean("isingame"), fs.getInt("gamesplayed"), fs.getInt("wins"), fs.getInt("draws"), fs.getInt("losses")));
                     Server.clients.put(fs.getInt("userid"),userHandler);
                 }
-                    return "{\"userid\":"+userHandler.getPlayer().getUserid()+"}";
+                    return "{\"RequestType\":\"Login\",\"userid\":"+userHandler.getPlayer().getUserid()+"}";
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return "{\"invalid\":\"Invalid username or password\"}";
+        return "{\"RequestType\":\"Login\",\"invalid\":\"Invalid username or password\"}";
     }
 
-
-
-    private static String Login(JSONObject json) {
-        String reply = "";
-        apiFunctions api = new apiFunctions();
-        JSONObject object = json.getJSONObject("User");
-        String username = object.getString("username");
-        String password = object.getString("password");
-
-        ResultSet rs = api.read("SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "'");
-        try {
-            if (rs.next()) {
-                // Update player's login status
-                int updateStatus = api.update("UPDATE player SET isloggedin = 1 WHERE username = '" + username + "'");
-                if (updateStatus > 0) {
-                    reply = "Success";
-                    
-                } else {
-                    reply = "Failed to update login status";
-                }
-            } else {
-                reply = "Invalid username or password";
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            reply = "Error occurred during login";
-        }
-
-        return reply;
-    }
-    private static String Register(JSONObject jsonObject) {
+    private static String Register(String response) {
+        JSONObject jsonObject = new JSONObject(response);
         String reply= "";
         apiFunctions api = new apiFunctions();
         JSONObject object = jsonObject.getJSONObject("User");
@@ -94,7 +65,7 @@ public class Response {
 
         int rsInsertPlayer = api.create("INSERT INTO player (username, isloggedin,isingame, score, wins, draws, losses) VALUES ('"+username+"', 0,0,0,0,0,0)");
         int rsInsertUser = api.create("INSERT INTO user (username,email, password) VALUES ('"+username+"', '"+email+"', '"+password+"')");
-        return ""+rsInsertPlayer+rsInsertUser;
+        return "{\"RequestType\":\"Register\",\"value\":"+rsInsertPlayer+rsInsertUser+"}";
     }
 
 
@@ -103,7 +74,7 @@ public class Response {
         apiFunctions api = new apiFunctions();
         ResultSet rs = api.read("SELECT * FROM player WHERE isloggedin = 1");
         try {
-            reply = "{\"PlayList\":[";
+            reply = "{\"RequestType\":\"PlayerList\",\"PlayList\":[";
             while (rs.next()) {
                 reply += "{\"username\":\""+rs.getString("username")+"\" , \"isingame\":"+rs.getBoolean("isingame")+",\"userid\":"+rs.getInt("userid")+"},";
             }
@@ -120,7 +91,7 @@ public class Response {
         ResultSet rs = api.read("SELECT * FROM player ORDER BY score DESC LIMIT 20 ");
 
         try {
-            reply = "{\"Scoreboard\":[";
+            reply = "{\"RequestType\":\"Scoreboard\",\"Scoreboard\":[";
             while (rs.next()) {
                 reply += "{\"username\":\""+rs.getString("username")+"\" , \"score\":"+rs.getInt("score")+"},";
             }
@@ -136,7 +107,7 @@ public class Response {
         int userid = object.getInt("userid");
         int opponentid = object.getInt("opponentid");
         String sender = Server.clients.get(userid).getPlayer().toString();
-        Server.clients.get(opponentid).send("{\"RequestType\":\"RequestGame\"+\"Player\":"+sender+"}");
+        Server.clients.get(opponentid).send("{\"RequestType\":\"RequestGame\",\"Player\":"+sender+"}");
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(Server.clients.get(opponentid).getUserSocket().getInputStream()));
             JSONObject answer = new JSONObject(reader.readLine());
@@ -144,9 +115,6 @@ public class Response {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
-    }
-    public static boolean Register(String response){
         return false;
     }
 }

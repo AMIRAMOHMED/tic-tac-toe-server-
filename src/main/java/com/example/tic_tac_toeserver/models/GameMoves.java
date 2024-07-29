@@ -39,16 +39,17 @@ public class GameMoves {
     public String toString() {
         return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"moves\":[" + moves + "]}";
     }
-    public void toGameMoves(String query){
+    public static GameMoves toGameMoves(String query){
         JSONObject object = new JSONObject(query);
-        player1 = object.getString("player1");
-        player2 = object.getString("player2");
+        String player1 = object.getString("player1");
+        String player2 = object.getString("player2");
+        ArrayList<Integer> moves = new ArrayList<Integer>();
         JSONArray movesarr = object.getJSONArray("moves");
         if (movesarr != null){
             for (int i =0 ; i<movesarr.length();i++){
                 moves.add(movesarr.optInt(i));
             }
         }
-
+        return new GameMoves(player1,player2,moves);
     }
 }

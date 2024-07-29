@@ -52,12 +52,13 @@ public class Log {
         return "{\"gameid\":" + gameid + ", \"userid\":" + userid + ", \"opponentid\":" + opponentid + ", \"gameDate\":" + gameDate
                 + ", \"gameMoves\":[" + gameMoves.toString() + "]}";
     }
-    public void toLogs(String query){
+    public static Log toLogs(String query){
         JSONObject object = new JSONObject(query);
-        gameid = object.getInt("gameid");
-        userid = object.getInt("userid");
-        opponentid = object.getInt("opponentid");
-        gameDate = (Date) object.get("gameDate");
-        gameMoves.toGameMoves(object.getString("gameMoves"));
+        int gameid = object.getInt("gameid");
+        int userid = object.getInt("userid");
+        int opponentid = object.getInt("opponentid");
+        Date gameDate = (Date) object.get("gameDate");
+        GameMoves move = GameMoves.toGameMoves(object.getString("gameMoves"));
+        return new Log(gameid,userid,opponentid,gameDate,move);
     }
 }

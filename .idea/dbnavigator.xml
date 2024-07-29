@@ -41,18 +41,18 @@
           <description value="" />
           <database-type value="MYSQL" />
           <config-type value="BASIC" />
-          <database-version value="8.0" />
+          <database-version value="5.5" />
           <driver-source value="BUNDLED" />
           <driver-library value="" />
           <driver value="" />
           <url-type value="DATABASE" />
           <host value="localhost" />
-          <port value="8889" />
+          <port value="3306" />
           <database value="tictactoe" />
           <tns-folder value="" />
           <tns-profile value="" />
           <type value="USER" />
-          <user value="amira" />
+          <user value="root" />
           <deprecated-pwd value="" />
         </database>
         <properties>

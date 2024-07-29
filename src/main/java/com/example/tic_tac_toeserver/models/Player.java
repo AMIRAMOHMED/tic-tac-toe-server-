@@ -100,22 +100,23 @@ public class Player {
     }
     @Override
     public String toString() {
-        return "[{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
+        return "{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
                 + isingame + ", \"gamesplayed\":" + gamesplayed + ", \"wins\":" + wins + ", \"draws\":" + draws + ", \"losses\":"
-                + losses + ", \"score\":" + score + "}]";
+                + losses + ", \"score\":" + score + "}";
     }
 
-    public void fromJson(String json){
+    public static Player fromJson(String json){
+//        return gson.fromJson(json, Player.class);
         JSONObject object = new JSONObject(json);
-        userid =  object.getInt("userid");
-        username = object.getString("username");
-        isloggedin = object.getBoolean("isloggedin");
-        isingame= object.getBoolean("isingame");
-        gamesplayed= object.getInt("gamesplayed");
-        wins= object.getInt("wins");
-        draws= object.getInt("draws");
-        losses=object.getInt("losses");
-        score= object.getInt("score");
+        int userid =  object.getInt("userid");
+        String username = object.getString("username");
+        boolean isloggedin = object.getBoolean("isloggedin");
+        boolean isingame= object.getBoolean("isingame");
+        int gamesplayed= object.getInt("gamesplayed");
+        int wins= object.getInt("wins");
+        int draws= object.getInt("draws");
+        int losses=object.getInt("losses");
+        return new  Player(userid,username,isloggedin,isingame,gamesplayed,wins,draws,losses);
     }
     
 }

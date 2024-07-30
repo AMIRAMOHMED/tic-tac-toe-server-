@@ -11,11 +11,9 @@ public class Server extends Thread {
     private ServerSocket serverSocket;
     private Socket clientSocket;
     public static HashMap<Integer, UserHandler> clients;
-    public static HashMap<String, GameHandler> games ;
     boolean running = false;
 static{
     clients = new HashMap<>();
-    games =new HashMap<>();
 }
 
     public void startServer() {

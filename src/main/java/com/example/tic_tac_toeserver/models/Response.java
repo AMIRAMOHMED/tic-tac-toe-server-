@@ -2,10 +2,10 @@ package com.example.tic_tac_toeserver.models;
 
 import com.example.tic_tac_toeserver.constants.RequestType;
 import com.example.tic_tac_toeserver.database.apiFunctions;
-import com.example.tic_tac_toeserver.logic.GameHandler;
 import com.example.tic_tac_toeserver.logic.PlayerHandler;
 import com.example.tic_tac_toeserver.logic.Server;
 import com.example.tic_tac_toeserver.logic.UserHandler;
+import com.mysql.cj.util.StringInspector;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -27,23 +27,39 @@ public class Response {
             case Login -> Login(response, userHandler);
             case RequestGame -> RequestGame(response)+"";
             case RequestGameResponse -> RequestGameResponse(object);
+            case InGame -> inGame(object);
 //            case PlayAgain -> "";
 //            case Surrender -> "";
             case PlayerList -> getPlayList();
             case Scoreboard -> getScoreBoard();
+            case GameEnded -> getGameEnded(object);
 //            case GameHistory -> "";
             default -> "";
         };
+    }
+
+    private static String getGameEnded(JSONObject object) {
+        Player player = Player.fromJson(String.valueOf(object.getJSONObject("Player")));
+        Server.clients.get(player.getUserid()).send("{\"RequestType\":\"GameEnded\",}");
+        return "{\"RequestType\":\"GameEnded\",}";
+    }
+
+    private static String inGame(JSONObject object){
+        Player player = Player.fromJson(String.valueOf(object.getJSONObject("Player")));
+        Server.clients.get(player.getUserid()).send("{\"RequestType\":\"InGame\",\"play\":"+object.getInt("value")+"}");
+        return "{\"RequestType\":\"Ignore\"}";
+    }
+
+    private static String Ignore() {
+        return "{\"RequestType\":\"Ignore\"}";
     }
 
     private static String RequestGameResponse(JSONObject object) {
         if (object.getBoolean("Value")){
             UserHandler user = Server.clients.get(object.getInt("userid"));
             UserHandler opponent = Server.clients.get(object.getInt("opponentid"));
-            user.send("{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+opponent.getPlayer().toString()+"}");
-            new GameHandler(user,opponent);
-            System.out.println("Sent to opponent");
-            return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+user.getPlayer().toString()+"}";
+            user.send("{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+opponent.getPlayer().toString()+", \"flag\":"+true+"}");
+            return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+user.getPlayer().toString()+", \"flag\":"+false+"}";
         }
         return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+false+"}";
     }

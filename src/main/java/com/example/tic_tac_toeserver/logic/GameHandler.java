@@ -2,55 +2,93 @@ package com.example.tic_tac_toeserver.logic;
 
 import com.example.tic_tac_toeserver.models.GameMoves;
 import com.example.tic_tac_toeserver.models.PlayBoard;
-import com.example.tic_tac_toeserver.models.Response;
-import com.example.tic_tac_toeserver.models.User;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class GameHandler extends Thread{
+public class GameHandler{
     public String id = UUID.randomUUID().toString().split("-")[0];
     GameMoves gameMoves;
     ArrayList<Integer> moves;
     PlayBoard board;
     UserHandler user;
     UserHandler opponent;
-    String response;
-    JSONObject obj;
+    boolean flag;
+    PrintWriter userOutput;
+    PrintWriter opponentOutput;
+    BufferedReader userInput;
+    BufferedReader opponentInput;
     public GameHandler(UserHandler user, UserHandler opponent){
         this.user = user;
         this.opponent = opponent;
+        try {
+            userOutput = new PrintWriter(user.getUserSocket().getOutputStream());
+            opponentOutput = new PrintWriter(opponent.getUserSocket().getOutputStream());
+            userInput = new BufferedReader(new InputStreamReader(user.getUserSocket().getInputStream()));
+            opponentInput = new BufferedReader(new InputStreamReader(opponent.getUserSocket().getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         gameMoves= new GameMoves();
         moves = new ArrayList<Integer>();
         board = new PlayBoard();
-
-    }
-    public void handleGame(){
-        int i = 0;
-        while (true) {
-            endGame(user, opponent, board.play(i, 'X'));
-            endGame(opponent, user, board.play(i, 'O'));
-        }
+        flag = true;
+        run();
     }
 
-    public void endGame(UserHandler winner, UserHandler loser, int flag){
-        switch (flag){
-            case 0:
-                winner.getPlayer().addDraw();
-                loser.getPlayer().addDraw();
+    private void run() {
+        int i = -1;
+        while (i<0) {
+            try {
+                int index = Integer.parseInt(userInput.readLine());
+                i = board.play(index, flag ? 'X' : 'O');
+                opponentOutput.println("{\"RequestType\":\"InGame\", \"play\":"+index+"}");
+                if (i== 0 || i == 1){
+                    setWinner();
+                }
+                flag = !flag ;
+            } catch (Exception e ){
+                flag = !flag;
+                setWinner();
                 break;
-            case 1:
-                interrupt();
-                winner.getPlayer().addWin();
-                loser.getPlayer().addLose();
+            }
+            try {
+                int index = Integer.parseInt(opponentInput.readLine());
+                i = board.play(index, flag ? 'X' : 'O');
+                userOutput.println("{\"RequestType\":\"InGame\" , \"play\":"+index+"}");
+                flag = !flag ;
+            } catch (Exception e ){
+                flag = !flag;
+                setWinner();
                 break;
-            default:
-                break;
+            }
         }
+        if ( i==1) setWinner();
+        else if (i == 0) setDraw();
+    }
+    private void setWinner(){
+        if (flag) {
+            user.getPlayer().addWin();
+            opponent.getPlayer().addLose();
+            user.send("{\"RequestType\":\"EndGame\", \"Value\":"+1+"}");
+            opponent.send("{\"RequestType\":\"EndGame\", \"Value\":"+-1+"}");
+        }
+        else {
+            opponent.getPlayer().addWin();
+            user.getPlayer().addLose();
+            opponent.send("{\"RequestType\":\"EndGame\", \"Value\":"+1+"}");
+            user.send("{\"RequestType\":\"EndGame\", \"Value\":"+-1+"}");
+        }
+    }
+    private void setDraw(){
+        user.getPlayer().addDraw();
+        opponent.getPlayer().addDraw();
+        user.send("{\"RequestType\":\"EndGame\", \"Value\":"+0+"}");
+        opponent.send("{\"RequestType\":\"EndGame\", \"Value\":"+0+"}");
     }
 
 }

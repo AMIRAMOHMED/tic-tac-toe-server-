@@ -4,6 +4,7 @@ public enum RequestType {
     Register,
     Login,
     RequestGame,
+    InGame,
     PlayAgain,
     Surrender,
     PlayerList,

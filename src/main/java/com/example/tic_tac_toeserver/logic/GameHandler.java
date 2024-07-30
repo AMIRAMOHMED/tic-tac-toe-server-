@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class GameHandler{
+public class GameHandler extends Thread{
     public String id = UUID.randomUUID().toString().split("-")[0];
     GameMoves gameMoves;
     ArrayList<Integer> moves;
@@ -37,10 +37,11 @@ public class GameHandler{
         moves = new ArrayList<Integer>();
         board = new PlayBoard();
         flag = true;
-        run();
+        start();
     }
 
-    private void run() {
+    @Override
+    public void run() {
         int i = -1;
         while (i<0) {
             try {

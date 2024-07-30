@@ -40,8 +40,9 @@ public class Response {
         if (object.getBoolean("Value")){
             UserHandler user = Server.clients.get(object.getInt("userid"));
             UserHandler opponent = Server.clients.get(object.getInt("opponentid"));
-            new GameHandler(user,opponent);
             user.send("{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+opponent.getPlayer().toString()+"}");
+            new GameHandler(user,opponent);
+            System.out.println("Sent to opponent");
             return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+user.getPlayer().toString()+"}";
         }
         return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+false+"}";
@@ -56,10 +57,10 @@ public class Response {
             if (rs.next()) {
                 ResultSet fs = api.read("SELECT * FROM player WHERE userid= "+rs.getInt("userid"));
                 if (fs.next()) {
-                    userHandler.setPlayer(new Player(fs.getInt("userid"), fs.getString("username"), fs.getBoolean("isloggedin"), fs.getBoolean("isingame"), fs.getInt("gamesplayed"), fs.getInt("wins"), fs.getInt("draws"), fs.getInt("losses")));
+                    userHandler.setPlayer(new Player(fs));
                     Server.clients.put(fs.getInt("userid"),userHandler);
                 }
-                    return "{\"RequestType\":\"Login\",\"userid\":"+userHandler.getPlayer().getUserid()+"}";
+                    return "{\"RequestType\":\"Login\",\"Player\":"+ new Player(fs).toString() +"}";
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -122,11 +123,6 @@ public class Response {
         UserHandler user = Server.clients.get(userid);
         UserHandler opponent = Server.clients.get(opponentid);
         opponent.send("{\"RequestType\":\"RequestGame\",\"Player\":"+user.getPlayer().toString()+"}");
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        return "{\"RequestType\":\"RequestGameResponse\",\"Value\":"+false+"}";
+        return "{\"RequestType\":\"Ignore\"}";
     }
 }

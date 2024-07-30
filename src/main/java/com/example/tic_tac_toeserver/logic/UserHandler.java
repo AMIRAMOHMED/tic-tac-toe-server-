@@ -42,15 +42,14 @@ public class UserHandler extends Thread {
         new Thread(() -> {
             try {
                 String line = "";
-                System.out.println("Here");
                 while ((line = input.readLine()) != null) {
                     System.out.println(line);
                     send(Response.getResponse(line,this));
                 }
             } catch (IOException e) {
-                Server.clients.remove(this);
                 e.printStackTrace();
             }
+            Server.clients.remove(this);
             disconnect();
         }).start();
     }

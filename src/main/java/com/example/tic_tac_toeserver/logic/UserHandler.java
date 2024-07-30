@@ -48,6 +48,7 @@ public class UserHandler extends Thread {
                     send(Response.getResponse(line,this));
                 }
             } catch (IOException e) {
+                Server.clients.remove(this);
                 e.printStackTrace();
             }
             disconnect();

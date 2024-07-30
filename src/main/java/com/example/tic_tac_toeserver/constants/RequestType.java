@@ -9,4 +9,5 @@ public enum RequestType {
     PlayerList,
     Scoreboard,
     GameHistory,
+    RequestGameResponse
 }

@@ -2,6 +2,7 @@ package com.example.tic_tac_toeserver.logic;
 
 import com.example.tic_tac_toeserver.models.GameMoves;
 import com.example.tic_tac_toeserver.models.PlayBoard;
+import com.example.tic_tac_toeserver.models.Response;
 import com.example.tic_tac_toeserver.models.User;
 import org.json.JSONObject;
 
@@ -26,27 +27,6 @@ public class GameHandler extends Thread{
         gameMoves= new GameMoves();
         moves = new ArrayList<Integer>();
         board = new PlayBoard();
-        this.start();
-    }
-    @Override
-    public void run() {
-        opponent.send("{\"RequestType\":\"RequestGame\",\"Player\":"+user.getPlayer().toString()+"}");
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(opponent.getUserSocket().getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                obj = new JSONObject(reader.readLine());
-                response = obj.toString();
-                user.send(response);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("Entered Game Hanndler");
-        if (obj.getBoolean("accepted")) {
-            handleGame();
-        }
-        else this.interrupt();
 
     }
     public void handleGame(){

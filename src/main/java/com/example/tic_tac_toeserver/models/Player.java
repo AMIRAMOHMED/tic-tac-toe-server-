@@ -1,6 +1,9 @@
 package com.example.tic_tac_toeserver.models;
 import org.json.JSONObject;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Player {
     private int userid;
     private String username;
@@ -24,6 +27,23 @@ public class Player {
         this.losses = losses;
         score = wins - losses;
     }
+
+    public Player(ResultSet rs){
+        try {
+            userid =rs.getInt("userid");
+            username = rs.getString("username");
+            isloggedin = rs.getBoolean("isloggedin");
+            isingame = rs.getBoolean("isingame");
+            gamesplayed = rs.getInt("gamesplayed");
+            wins= rs.getInt("wins");
+            draws =rs.getInt("draws");
+            losses=rs.getInt("losses");
+            score=rs.getInt("score");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Player(String username, boolean isloggedin, boolean isingame, int gamesplayed, int wins, int draws,
             int losses, int score) {
         this.username = username;
@@ -104,6 +124,7 @@ public class Player {
                 + isingame + ", \"gamesplayed\":" + gamesplayed + ", \"wins\":" + wins + ", \"draws\":" + draws + ", \"losses\":"
                 + losses + ", \"score\":" + score + "}";
     }
+
 
     public static Player fromJson(String json){
 //        return gson.fromJson(json, Player.class);

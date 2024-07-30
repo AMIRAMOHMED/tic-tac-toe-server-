@@ -26,6 +26,7 @@ public class Response {
             case Register -> Register(response)+"";
             case Login -> Login(response, userHandler);
             case RequestGame -> RequestGame(response)+"";
+            case RequestGameResponse -> RequestGameResponse(object);
 //            case PlayAgain -> "";
 //            case Surrender -> "";
             case PlayerList -> getPlayList();
@@ -34,6 +35,18 @@ public class Response {
             default -> "";
         };
     }
+
+    private static String RequestGameResponse(JSONObject object) {
+        if (object.getBoolean("Value")){
+            UserHandler user = Server.clients.get(object.getInt("userid"));
+            UserHandler opponent = Server.clients.get(object.getInt("opponentid"));
+            new GameHandler(user,opponent);
+            user.send("{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+opponent.getPlayer().toString()+"}");
+            return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+true+", \"opponent\":"+user.getPlayer().toString()+"}";
+        }
+        return "{\"RequestType\":\"RequestGameResponse\", \"Value\":"+false+"}";
+    }
+
     private static String Login(String json, UserHandler userHandler){
         JSONObject object = new JSONObject(json);
         User user = User.toUser(object.getJSONObject("User"));
@@ -76,7 +89,7 @@ public class Response {
         try {
             reply = "{\"RequestType\":\"PlayerList\",\"PlayList\":[";
             while (rs.next()) {
-                reply += "{\"username\":\""+rs.getString("username")+"\" , \"isingame\":"+rs.getBoolean("isingame")+",\"userid\":"+rs.getInt("userid")+"},";
+                reply += new Player(rs).toString() +",";
             }
             reply += "]}";
         } catch (SQLException ignored){
@@ -106,12 +119,14 @@ public class Response {
         JSONObject object = new JSONObject(response);
         int userid = object.getInt("userid");
         int opponentid = object.getInt("opponentid");
-        GameHandler game = new GameHandler(Server.clients.get(userid),Server.clients.get(opponentid));
+        UserHandler user = Server.clients.get(userid);
+        UserHandler opponent = Server.clients.get(opponentid);
+        opponent.send("{\"RequestType\":\"RequestGame\",\"Player\":"+user.getPlayer().toString()+"}");
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        return "";
+        return "{\"RequestType\":\"RequestGameResponse\",\"Value\":"+false+"}";
     }
 }

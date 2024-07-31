@@ -30,6 +30,7 @@ public class Player {
 
     public Player(ResultSet rs){
         try {
+
             userid =rs.getInt("userid");
             username = rs.getString("username");
             isloggedin = rs.getBoolean("isloggedin");
@@ -110,6 +111,9 @@ public class Player {
     public void addLose(){
         losses++;
         score--;
+    }
+    public int getScore(){
+        return score;
     }
     public void addWin(){
         wins++;

@@ -2,16 +2,9 @@ package com.example.tic_tac_toeserver.models;
 
 import com.example.tic_tac_toeserver.constants.RequestType;
 import com.example.tic_tac_toeserver.database.apiFunctions;
-import com.example.tic_tac_toeserver.logic.PlayerHandler;
 import com.example.tic_tac_toeserver.logic.Server;
 import com.example.tic_tac_toeserver.logic.UserHandler;
-import com.mysql.cj.util.StringInspector;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

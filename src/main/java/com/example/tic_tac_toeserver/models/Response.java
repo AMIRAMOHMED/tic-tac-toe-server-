@@ -21,14 +21,19 @@ public class Response {
             case RequestGame -> RequestGame(response)+"";
             case RequestGameResponse -> RequestGameResponse(object);
             case InGame -> inGame(object);
-//            case PlayAgain -> "";
-//            case Surrender -> "";
+//            case PlayAgain -> playAgain(object);
+            case Surrender -> Surrender(object);
             case PlayerList -> getPlayList();
             case Scoreboard -> getScoreBoard();
             case GameEnded -> getGameEnded(object);
 //            case GameHistory -> "";
             default -> "";
         };
+    }
+
+    private static String Surrender(JSONObject object) {
+        //TODO
+        return "\"RequestType\":\"Ignore\"";
     }
 
     private static String getGameEnded(JSONObject object) {

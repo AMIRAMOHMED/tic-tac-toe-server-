@@ -4,6 +4,7 @@ import com.example.tic_tac_toeserver.constants.RequestType;
 import com.example.tic_tac_toeserver.database.apiFunctions;
 import com.example.tic_tac_toeserver.logic.Server;
 import com.example.tic_tac_toeserver.logic.UserHandler;
+import com.example.tic_tac_toeserver.services.PlayerServices;
 import org.json.JSONObject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,21 +27,17 @@ public class Response {
             case PlayerList -> getPlayList();
             case Scoreboard -> getScoreBoard();
             case GameEnded -> getGameEnded(object);
-//            case getPlayer -> getPlayer();
+            case getPlayer -> getPlayer(object.getInt("userid"));
 //            case GameHistory -> "";
             default -> "";
         };
     }
 
-//    private static String getPlayer() {
-//        apiFunctions api = new apiFunctions();
-//        ResultSet fs = api.read("SELECT * FROM player WHERE userid= "+rs.getInt("userid"));
-//        if (fs.next()) {
-//            userHandler.setPlayer(new Player(fs));
-//            Server.clients.put(fs.getInt("userid"),userHandler);
-//        }
-//        return "{\"RequestType\":\"Login\",\"Player\":"+ new Player(fs).toString() +"}";
-//    }
+    private static String getPlayer(int id) {
+        PlayerServices playerdb = new PlayerServices();
+        Player player =  playerdb.getPlayerById(id);
+        return "{\"RequestType\":\"getPlayer\",\"Player\":"+ player  +"}";
+    }
 
     private static String Surrender(JSONObject object) {
         //TODO
@@ -133,7 +130,7 @@ public class Response {
         try {
             reply = "{\"RequestType\":\"Scoreboard\",\"Scoreboard\":[";
             while (rs.next()) {
-                reply += "{\"username\":\""+rs.getString("username")+"\" , \"score\":"+rs.getInt("score")+"},";
+                reply += new Player(rs) +",";
             }
             reply += "]}";
         } catch (SQLException ignored){

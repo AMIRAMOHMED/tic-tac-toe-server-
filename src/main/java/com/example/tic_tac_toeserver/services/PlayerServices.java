@@ -16,7 +16,7 @@ public class PlayerServices {
     }
 
     public Player getPlayerById(int userId) {
-        String query = "SELECT * FROM player WHERE id = " + userId;
+        String query = "SELECT * FROM player WHERE userid = " + userId;
         try (ResultSet rs = db.getData(query)) {
             if (rs.next()) {
                 return new Player(rs);
@@ -28,12 +28,12 @@ public class PlayerServices {
     }
 
     public void setLogging(int userId, boolean isLoggedIn) {
-        String query = "UPDATE player SET isloggedin = " + isLoggedIn + " WHERE id = " + userId;
+        String query = "UPDATE player SET isloggedin = " + isLoggedIn + " WHERE userid = " + userId;
         db.insertData(query);
     }
 
     public void setInGame(int userId, boolean isInGame) {
-        String query = "UPDATE player SET isingame = " + isInGame + " WHERE id = " + userId;
+        String query = "UPDATE player SET isingame = " + isInGame + " WHERE userid = " + userId;
         db.insertData(query);
     }
 
@@ -47,7 +47,7 @@ public class PlayerServices {
             String query = "UPDATE player SET wins = " + player.getWins()
                     + ", gamesplayed = " + player.getGamesplayed() +
                     ", score = " + player.getScore()
-                    + " WHERE id = " + userId;
+                    + " WHERE userid = " + userId;
             db.insertData(query);
         }
     }
@@ -62,7 +62,7 @@ public class PlayerServices {
             String query = "UPDATE player SET losses = "
                     + player.getLosses() + ", gamesplayed = "
                     + player.getGamesplayed()
-                    + ", score = " + player.getScore() + " WHERE id = " + userId;
+                    + ", score = " + player.getScore() + " WHERE userid = " + userId;
             db.insertData(query);
         }
     }
@@ -77,7 +77,7 @@ public class PlayerServices {
                     + player.getDraws() +
                     ", gamesplayed = " +
                     player.getGamesplayed() +
-                    " WHERE id = " + userId;
+                    " WHERE userid = " + userId;
             db.insertData(query);
         }
     }

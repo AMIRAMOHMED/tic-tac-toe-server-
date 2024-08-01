@@ -24,7 +24,7 @@ public class LogServices {
                 int userid = rs.getInt("userid");
                 int opponentid = rs.getInt("opponentid");
                 Date gameDate = rs.getTimestamp("gameDate");
-                GameMoves gameMoves = GameMoves.fromString(rs.getString("gameMoves")); // Assuming GameMoves has a fromString method
+                GameMoves gameMoves = GameMoves.toGameMoves(rs.getString("gameMoves")); // Assuming GameMoves has a fromString method
 
                 return new Log(gameId, userid, opponentid, gameDate, gameMoves);
             }
@@ -41,7 +41,7 @@ public class LogServices {
                 int gameid = rs.getInt("gameid");
                 int opponentid = rs.getInt("opponentid");
                 Date gameDate = rs.getTimestamp("gameDate");
-                GameMoves gameMoves = GameMoves.fromString(rs.getString("gameMoves"));
+                GameMoves gameMoves = GameMoves.toGameMoves(rs.getString("gameMoves"));
 
                 return new Log(gameid, userId, opponentid, gameDate, gameMoves);
             }
@@ -58,7 +58,7 @@ public class LogServices {
                 int gameid = rs.getInt("gameid");
                 int userid = rs.getInt("userid");
                 Date gameDate = rs.getTimestamp("gameDate");
-                GameMoves gameMoves = GameMoves.fromString(rs.getString("gameMoves"));
+                GameMoves gameMoves = GameMoves.toGameMoves(rs.getString("gameMoves"));
 
                 return new Log(gameid, userid, opponentId, gameDate, gameMoves);
             }

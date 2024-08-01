@@ -26,14 +26,26 @@ public class Response {
             case PlayerList -> getPlayList();
             case Scoreboard -> getScoreBoard();
             case GameEnded -> getGameEnded(object);
+//            case getPlayer -> getPlayer();
 //            case GameHistory -> "";
             default -> "";
         };
     }
 
+//    private static String getPlayer() {
+//        apiFunctions api = new apiFunctions();
+//        ResultSet fs = api.read("SELECT * FROM player WHERE userid= "+rs.getInt("userid"));
+//        if (fs.next()) {
+//            userHandler.setPlayer(new Player(fs));
+//            Server.clients.put(fs.getInt("userid"),userHandler);
+//        }
+//        return "{\"RequestType\":\"Login\",\"Player\":"+ new Player(fs).toString() +"}";
+//    }
+
     private static String Surrender(JSONObject object) {
         //TODO
-        return "\"RequestType\":\"Ignore\"";
+        Server.clients.get(object.getJSONObject("opponent").getInt("userid")).send("{\"RequestType\":\"Surrender\"}");
+        return "{\"RequestType\":\"Ignore\"}";
     }
 
     private static String getGameEnded(JSONObject object) {

@@ -48,4 +48,21 @@ public class UserServices {
         }
         return false;
     }
+
+    public User getUserByUsernameAndPassword(String username, String password) {
+        String query = "SELECT * FROM user WHERE username = '" + username + "' AND password = '" + password + "'";
+        try (ResultSet rs = db.getData(query)) {
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("userid"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("password")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
